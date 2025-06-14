@@ -1,0 +1,81 @@
+A list of PHP scripts i used to make this work. 
+
+Upload Page:
+Firstly, i worked on creating a simple page that allowed me to go into the files of my PC and select any PNG or JPEG file to upload.
+
+<h2>Upload an Image</h2> //Main upload button
+    <div class="upload-form"> 
+        <form action="upload.php" method="POST" enctype="multipart/form-data"> //These 3 lines make up the script that allows me to upload the photo
+            <input type="file" name="image" accept="image/*" required><br>
+            <input type="submit" value="Upload">
+        </form>
+    </div>
+    <div class="nav">
+        <a href="gallery.php">View Gallery</a> //Navigates you to the gallery page when the "View Gallery" button is pressed
+    </div>
+</body>
+</html>
+
+
+Photo Checker:
+
+
+<?php
+$targetDir = "uploads/";
+$targetFile = $targetDir . basename($_FILES["image"]["name"]);
+$imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+// Check if file is a real image
+$check = getimagesize($_FILES["image"]["tmp_name"]);
+if ($check === false) {
+    die("File is not an image.");
+}
+
+// Max size: 5MB
+if ($_FILES["image"]["size"] > 5000000) { //Checks the files max size doesnt go over the preset size, if it does it prints an error
+    die("Sorry, your file is too large.");
+}
+
+// Allowed file types
+$allowed = ['jpg', 'jpeg', 'png', 'gif']; //Checks that the image is in any one of these formats 
+if (!in_array($imageFileType, $allowed)) {
+    die("Only JPG, JPEG, PNG & GIF files are allowed.");
+}
+
+// Save the file
+if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
+    echo "The file " . htmlspecialchars(basename($_FILES["image"]["name"])) . " has been uploaded.<br>";
+    echo "<a href='index.php'>Upload another</a> | <a href='gallery.php'>View Gallery</a>";
+} else {
+    echo "Sorry, there was an error uploading your file.";
+}
+?>
+
+
+
+Gallery Page:
+
+    <h2>Image Gallery</h2>
+
+    <div class="nav">
+        <a href="index.php">Upload More</a>
+    </div>
+
+    <div class="gallery">
+        <?php
+        $dir = "uploads/";
+        $images = array_diff(scandir($dir), array('.', '..'));
+
+        foreach ($images as $image) {
+            $imagePath = "uploads/$image";
+            echo "<a href='$imagePath' target='_blank'>
+                    <img src='$imagePath'>
+                  </a>";
+        }
+        ?>
+    </div>
+</body>
+</html>
+
+
+
