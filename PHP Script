@@ -18,7 +18,8 @@ Firstly, i worked on creating a simple page that allowed me to go into the files
 
 
 Photo Checker:
-
+I then created a simple script that checks the photo or image uploaded is suitable for the type of images and space i have. I didnt want images to take up too much space, therefore i 
+limited it to 5MB of max size of a file, i then ensured the file would only be uploaded if it was of the following file types in the description below. This was done to ensure that space wouldnt be taken up by bigger file types of photos.
 
 <?php
 $targetDir = "uploads/";
@@ -42,7 +43,7 @@ if (!in_array($imageFileType, $allowed)) {
     die("Only JPG, JPEG, PNG & GIF files are allowed.");
 }
 
-// Save the file
+// Save the file, saves it to the upload file within the server
 if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
     echo "The file " . htmlspecialchars(basename($_FILES["image"]["name"])) . " has been uploaded.<br>";
     echo "<a href='index.php'>Upload another</a> | <a href='gallery.php'>View Gallery</a>";
@@ -58,7 +59,7 @@ Gallery Page:
     <h2>Image Gallery</h2>
 
     <div class="nav">
-        <a href="index.php">Upload More</a>
+        <a href="index.php">Upload More</a> // This button takes you back to the Upload page of the website
     </div>
 
     <div class="gallery">
